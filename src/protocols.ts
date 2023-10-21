@@ -45,6 +45,7 @@ export type CardPaymentParams = {
 
 export type InputPaymentBody = {
   ticketId: number;
+  price: number;
   cardData: CardPaymentParams;
 };
 
