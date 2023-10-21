@@ -2,9 +2,15 @@ import { Payment, User, Event } from '@prisma/client';
 import sgMail from '@sendgrid/mail';
 import { TicketWithType } from '@/services';
 
-export async function generateEmail(user: User, ticket: TicketWithType, paymentData: Payment, eventData: Event) {
-  const headHtml = generateHeadHtml();
-  const bodyHtml = generateBodyHtml(ticket, paymentData, eventData);
+export async function generateEmail(
+  user: User,
+  ticket: TicketWithType,
+  paymentData: Payment,
+  eventData: Event,
+  price: number,
+) {
+  const headHtml = generateHeadHtml(eventData);
+  const bodyHtml = generateBodyHtml(ticket, paymentData, eventData, price);
 
   const emailHtml = `
     <!DOCTYPE html>
@@ -27,7 +33,8 @@ export async function generateEmail(user: User, ticket: TicketWithType, paymentD
   await sgMail.send(message);
 }
 
-function generateHeadHtml() {
+function generateHeadHtml(eventData: Event) {
+  const { backgroundImageUrl } = eventData;
   const headHtml = `
     <head>
       <style>
@@ -73,7 +80,7 @@ function generateHeadHtml() {
         }
 
         .page {
-          background: linear-gradient(to right, #FA4098, #FFD77F);
+          background: ${backgroundImageUrl};
           background-size: cover;
           width: 100%;
         }
@@ -116,9 +123,9 @@ function generateHeadHtml() {
   return headHtml;
 }
 
-function generateBodyHtml(ticket: TicketWithType, paymentData: Payment, eventData: Event) {
+function generateBodyHtml(ticket: TicketWithType, paymentData: Payment, eventData: Event, price: number) {
   const { TicketType } = ticket;
-  const { ticketId, value } = paymentData;
+  const { ticketId } = paymentData;
   const { title, logoImageUrl, endsAt } = eventData;
 
   function formatTicketMessage() {
@@ -129,7 +136,7 @@ function generateBodyHtml(ticket: TicketWithType, paymentData: Payment, eventDat
     }
 
     if (!TicketType.includesHotel) message += 'presencial';
-    else message += 'presencial + Hotel';
+    else message += 'presencial + hotel';
 
     return message;
   }
@@ -152,7 +159,7 @@ function generateBodyHtml(ticket: TicketWithType, paymentData: Payment, eventDat
 
   const formatedTicketMessage = formatTicketMessage();
   const formatedDate = formatDate(endsAt);
-  const formatedValue = formatValue(value);
+  const formatedValue = formatValue(price);
 
   const bodyHtml = `
     <body>

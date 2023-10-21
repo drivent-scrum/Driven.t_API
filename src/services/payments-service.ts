@@ -30,7 +30,7 @@ async function getPaymentByTicketId(userId: number, ticketId: number) {
   return payment;
 }
 
-async function paymentProcess(ticketId: number, userId: number, cardData: CardPaymentParams) {
+async function paymentProcess(ticketId: number, userId: number, price: number, cardData: CardPaymentParams) {
   const { ticket } = await verifyTicketAndEnrollment(userId, ticketId);
 
   const paymentData: PaymentParams = {
@@ -42,15 +42,15 @@ async function paymentProcess(ticketId: number, userId: number, cardData: CardPa
 
   const payment = await paymentsRepository.createPayment(ticketId, paymentData);
   await ticketsRepository.ticketProcessPayment(ticketId);
-  await sendEmail(userId, payment, ticket);
+  await sendEmail(userId, payment, ticket, price);
   return payment;
 }
 
-async function sendEmail(userId: number, payment: Payment, ticket: TicketWithType) {
+async function sendEmail(userId: number, payment: Payment, ticket: TicketWithType, price: number) {
   const user = await userRepository.findById(userId);
   const event = await eventRepository.findFirst();
 
-  await generateEmail(user, ticket, payment, event);
+  await generateEmail(user, ticket, payment, event, price);
 }
 
 export type TicketWithType = Ticket & {

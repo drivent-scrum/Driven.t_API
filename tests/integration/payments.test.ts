@@ -140,7 +140,7 @@ describe('POST /payments/process', () => {
       const ticketType = await createTicketType();
       await createTicket(enrollment.id, ticketType.id, TicketStatus.RESERVED);
 
-      const body = { cardData: generateCreditCardData() };
+      const body = { price: faker.datatype.number(), cardData: generateCreditCardData() };
 
       const response = await server.post('/payments/process').set('Authorization', `Bearer ${token}`).send(body);
 
@@ -154,7 +154,7 @@ describe('POST /payments/process', () => {
       const ticketType = await createTicketType();
       const ticket = await createTicket(enrollment.id, ticketType.id, TicketStatus.RESERVED);
 
-      const body = { ticketId: ticket };
+      const body = { ticketId: ticket, price: faker.datatype.number() };
 
       const response = await server.post('/payments/process').set('Authorization', `Bearer ${token}`).send(body);
 
@@ -166,7 +166,7 @@ describe('POST /payments/process', () => {
       const token = await generateValidToken(user);
       await createEnrollmentWithAddress(user);
 
-      const body = { ticketId: 1, cardData: generateCreditCardData() };
+      const body = { ticketId: 1, price: faker.datatype.number(), cardData: generateCreditCardData() };
 
       const response = await server.post('/payments/process').set('Authorization', `Bearer ${token}`).send(body);
 
@@ -183,7 +183,7 @@ describe('POST /payments/process', () => {
       const otherUserEnrollment = await createEnrollmentWithAddress(otherUser);
       const ticket = await createTicket(otherUserEnrollment.id, ticketType.id, TicketStatus.RESERVED);
 
-      const body = { ticketId: ticket.id, cardData: generateCreditCardData() };
+      const body = { ticketId: ticket.id, price: faker.datatype.number(), cardData: generateCreditCardData() };
 
       const response = await server.post('/payments/process').set('Authorization', `Bearer ${token}`).send(body);
 
@@ -197,7 +197,7 @@ describe('POST /payments/process', () => {
       const ticketType = await createTicketType();
       const ticket = await createTicket(enrollment.id, ticketType.id, TicketStatus.RESERVED);
 
-      const body = { ticketId: ticket.id, cardData: generateCreditCardData() };
+      const body = { ticketId: ticket.id, price: faker.datatype.number(), cardData: generateCreditCardData() };
 
       const response = await server.post('/payments/process').set('Authorization', `Bearer ${token}`).send(body);
 
@@ -222,7 +222,7 @@ describe('POST /payments/process', () => {
 
       const beforeCount = await prisma.payment.count();
 
-      const body = { ticketId: ticket.id, cardData: generateCreditCardData() };
+      const body = { ticketId: ticket.id, price: faker.datatype.number(), cardData: generateCreditCardData() };
       await server.post('/payments/process').set('Authorization', `Bearer ${token}`).send(body);
 
       const afterCount = await prisma.payment.count();
@@ -238,7 +238,7 @@ describe('POST /payments/process', () => {
       const ticketType = await createTicketType();
       const ticket = await createTicket(enrollment.id, ticketType.id, TicketStatus.RESERVED);
 
-      const body = { ticketId: ticket.id, cardData: generateCreditCardData() };
+      const body = { ticketId: ticket.id, price: faker.datatype.number(), cardData: generateCreditCardData() };
       await server.post('/payments/process').set('Authorization', `Bearer ${token}`).send(body);
 
       const updatedTicket = await prisma.ticket.findUnique({ where: { id: ticket.id } });

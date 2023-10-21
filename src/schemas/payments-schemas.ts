@@ -3,6 +3,7 @@ import { InputPaymentBody } from '@/protocols';
 
 export const paymentSchema = Joi.object<InputPaymentBody>({
   ticketId: Joi.number().required(),
+  price: Joi.number().required(),
   cardData: {
     issuer: Joi.string().required(),
     number: Joi.string().required(),
