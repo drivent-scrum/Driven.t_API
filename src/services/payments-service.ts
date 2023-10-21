@@ -1,6 +1,14 @@
+import { Payment, Ticket, TicketType } from '@prisma/client';
 import { invalidDataError, notFoundError, unauthorizedError } from '@/errors';
 import { CardPaymentParams, PaymentParams } from '@/protocols';
-import { enrollmentRepository, paymentsRepository, ticketsRepository } from '@/repositories';
+import {
+  enrollmentRepository,
+  eventRepository,
+  paymentsRepository,
+  ticketsRepository,
+  userRepository,
+} from '@/repositories';
+import { generateEmail } from '@/utils/generate-email';
 
 async function verifyTicketAndEnrollment(userId: number, ticketId: number) {
   if (!ticketId || isNaN(ticketId)) throw invalidDataError('ticketId');
@@ -34,8 +42,20 @@ async function paymentProcess(ticketId: number, userId: number, cardData: CardPa
 
   const payment = await paymentsRepository.createPayment(ticketId, paymentData);
   await ticketsRepository.ticketProcessPayment(ticketId);
+  await sendEmail(userId, payment, ticket);
   return payment;
 }
+
+async function sendEmail(userId: number, payment: Payment, ticket: TicketWithType) {
+  const user = await userRepository.findById(userId);
+  const event = await eventRepository.findFirst();
+
+  await generateEmail(user, ticket, payment, event);
+}
+
+export type TicketWithType = Ticket & {
+  TicketType: TicketType;
+};
 
 export const paymentsService = {
   getPaymentByTicketId,
