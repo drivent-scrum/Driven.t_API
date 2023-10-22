@@ -33,12 +33,12 @@ async function getOneWithAddressByUserId(userId: number): Promise<GetOneWithAddr
   const address = getFirstAddress(firstAddress);
 
   return {
-    ...exclude(enrollmentWithAddress, 'userId', 'createdAt', 'updatedAt', 'Address'),
+    ...exclude(enrollmentWithAddress, 'userId', 'updatedAt', 'Address'),
     ...(!!address && { address }),
   };
 }
 
-type GetOneWithAddressByUserIdResult = Omit<Enrollment, 'userId' | 'createdAt' | 'updatedAt'>;
+type GetOneWithAddressByUserIdResult = Omit<Enrollment, 'userId' | 'updatedAt'>;
 
 function getFirstAddress(firstAddress: Address): GetAddressResult {
   if (!firstAddress) return null;
