@@ -19,7 +19,20 @@ async function findRoomsByHotelId(hotelId: number) {
   });
 }
 
+async function getAllHotelsWithRooms() {
+  return prisma.hotel.findMany({
+    include: {
+      Rooms: {
+        include: {
+          Booking: true,
+        },
+      },
+    },
+  });
+}
+
 export const hotelRepository = {
   findHotels,
   findRoomsByHotelId,
+  getAllHotelsWithRooms,
 };
