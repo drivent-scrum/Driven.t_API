@@ -1,3 +1,4 @@
+import { Activity } from '@prisma/client';
 import { prisma } from '@/config';
 
 async function getAllActivitiesDay() {
@@ -51,14 +52,11 @@ async function registerUserActivity(activityId: number, activityDayId: number, u
   });
 }
 
-async function countRegisteredActivities(activityId: number) {
-  const counter = await prisma.activityRegistration.aggregate({
-    _count: { id: true },
-    where: { activityId },
+async function updateActivityCapacity(activity: Activity) {
+  return await prisma.activity.update({
+    data: { capacity: activity.capacity - 1 },
+    where: { id: activity.id },
   });
-
-  const activitiesCounter = counter._count.id;
-  return activitiesCounter;
 }
 
 export const activitiesRepository = {
@@ -68,5 +66,5 @@ export const activitiesRepository = {
   findActivityById,
   getUserActivities,
   registerUserActivity,
-  countRegisteredActivities,
+  updateActivityCapacity,
 };

@@ -29,13 +29,13 @@ async function registerActivity(params: InputActivityBody, userId: number) {
   const activity = await activitiesRepository.findActivityById(activityId);
   if (!activity) throw notFoundError();
 
-  const activitiesCounter = await activitiesRepository.countRegisteredActivities(activityId);
-  if (activitiesCounter >= activity.capacity) throw conflictError('Activity maximum capacity exceeded.');
+  if (activity.capacity <= 0) throw conflictError('Activity maximum capacity exceeded.');
 
   const userActivities = await activitiesRepository.getUserActivities(userId);
   if (userActivities.length >= 1) checkTimeConflicts(activity, userActivities);
 
   await activitiesRepository.registerUserActivity(activityId, activityDayId, userId);
+  await activitiesRepository.updateActivityCapacity(activity);
 }
 
 function checkTimeConflicts(activity: Activity, userActivities: Activity[]) {
