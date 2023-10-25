@@ -49,8 +49,8 @@ async function main() {
           name: "LoL: montando o PC ideal", 
           location: "Auditório Principal", 
           capacity: 1, 
-          startsAt: "09:00",
-          endsAt: "10:00",
+          startsAt: "10:00",
+          endsAt: "11:00",
         },
         { 
           activityDayId: activityDays[0].id, 
