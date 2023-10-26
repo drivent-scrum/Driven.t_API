@@ -14,8 +14,6 @@ async function main() {
         endsAt: dayjs().add(21, "days").toDate(),
       },
     });
-
-    console.log({ event });
   }
 
   const activityDays = await prisma.activityDay.findFirst();
