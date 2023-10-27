@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import httpStatus from 'http-status';
 import { eventsService } from '@/services';
-import { redis } from '@/server';
+import { redis } from '@/config';
 
 const DEFAULT_EXPIRATION = 300;
 
