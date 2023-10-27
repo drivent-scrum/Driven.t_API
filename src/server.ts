@@ -1,7 +1,4 @@
-import { Redis } from 'ioredis';
 import app, { init } from '@/app';
-
-export const redis = new Redis(process.env.REDIS_URL);
 
 const port = +process.env.PORT || 4000;
 

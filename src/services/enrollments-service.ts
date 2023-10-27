@@ -55,8 +55,8 @@ async function createOrUpdateEnrollmentWithAddress(params: CreateOrUpdateEnrollm
 
   await getAddressFromCEP(address.cep);
 
+  // FIXME: refactor to transaction
   const newEnrollment = await enrollmentRepository.upsert(params.userId, enrollment, exclude(enrollment, 'userId'));
-
   await addressRepository.upsert(newEnrollment.id, address, address);
 }
 
