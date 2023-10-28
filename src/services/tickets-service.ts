@@ -18,6 +18,15 @@ async function getTicketByUserId(userId: number) {
   return ticket;
 }
 
+async function createTicketType(name: string, price: number, isRemote: boolean, includesHotel: boolean) {
+  const ticketType = await ticketsRepository.createTicketType(name, price, isRemote, includesHotel);
+  return ticketType;
+}
+async function updateTicketType(id: number, name: string, price: number, isRemote: boolean, includesHotel: boolean) {
+  const ticketType = await ticketsRepository.updateTicketType(id, name, price, isRemote, includesHotel);
+  return ticketType;
+}
+
 async function createTicket(userId: number, ticketTypeId: number) {
   if (!ticketTypeId) throw invalidDataError('ticketTypeId');
 
@@ -38,4 +47,6 @@ export const ticketsService = {
   findTicketTypes,
   getTicketByUserId,
   createTicket,
+  createTicketType,
+  updateTicketType,
 };
