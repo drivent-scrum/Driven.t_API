@@ -43,8 +43,19 @@ async function getAllHotelsWithRooms(userId: number) {
   return hotels;
 }
 
+async function updateHotelWithRooms(
+  id: number,
+  name: string,
+  image: string,
+  rooms: { name: string; capacity: number }[],
+) {
+  const hotel = await hotelRepository.upsertHotelWithRooms({ id, name, image, rooms });
+  return hotel;
+}
+
 export const hotelsService = {
   getHotels,
   getHotelsWithRooms,
   getAllHotelsWithRooms,
+  updateHotelWithRooms,
 };

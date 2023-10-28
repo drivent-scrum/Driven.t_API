@@ -16,3 +16,9 @@ export async function getDefaultEvent(_req: Request, res: Response) {
 
   res.status(httpStatus.OK).send(event);
 }
+
+export async function updateEvent(req: Request, res: Response) {
+  const { title, backgroundImageUrl, logoImageUrl, startsAt, endsAt } = req.body;
+  const event = await eventsService.updateEvent(title, backgroundImageUrl, logoImageUrl, startsAt, endsAt);
+  res.status(httpStatus.OK).send(event);
+}
