@@ -42,10 +42,14 @@ function checkTimeConflicts(activity: Activity, userActivities: Activity[]) {
   const startsAt = formatTimestamp(activity.startsAt);
   const endsAt = formatTimestamp(activity.endsAt);
 
-  const timeConflictActivites = userActivities.filter(
-    (userActivity) =>
-      startsAt < formatTimestamp(userActivity.endsAt) && endsAt > formatTimestamp(userActivity.startsAt),
-  );
+  const timeConflictActivites = userActivities.filter((userActivity) => {
+    const timeConflict =
+      startsAt < formatTimestamp(userActivity.endsAt) && endsAt > formatTimestamp(userActivity.startsAt);
+
+    const sameActivityDay = activity.activityDayId === userActivity.activityDayId;
+
+    if (timeConflict && sameActivityDay) return true;
+  });
 
   if (timeConflictActivites.length >= 1) throw conflictError('Cannot register activities with overlap in time!');
 }
