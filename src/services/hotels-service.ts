@@ -37,8 +37,7 @@ async function getHotelsWithRooms(userId: number, hotelId: number) {
   return hotelWithRooms;
 }
 
-async function getAllHotelsWithRooms(userId: number) {
-  await validateUserBooking(userId);
+async function getAllHotelsWithRooms() {
   const hotels = await hotelRepository.getAllHotelsWithRooms();
   return hotels;
 }

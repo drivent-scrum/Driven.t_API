@@ -5,11 +5,12 @@ import { ticketSchema, ticketTypeSchema } from '@/schemas/tickets-schemas';
 
 const ticketsRouter = Router();
 
+ticketsRouter.post('/types', validateBody(ticketTypeSchema), createTicketType);
+ticketsRouter.put('/types', validateBody(ticketTypeSchema), updateTicketType);
+ticketsRouter.get('/types-admin', getTicketTypes);
 ticketsRouter
   .all('/*', authenticateToken)
   .get('/types', getTicketTypes)
-  .post('/types', validateBody(ticketTypeSchema), createTicketType)
-  .put('/types', validateBody(ticketTypeSchema), updateTicketType)
   .get('/', getTicket)
   .post('/', validateBody(ticketSchema), createTicket);
 
