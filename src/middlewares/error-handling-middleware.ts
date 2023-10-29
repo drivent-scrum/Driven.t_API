@@ -8,7 +8,6 @@ export function handleApplicationErrors(
   res: Response,
   next: NextFunction,
 ) {
-  //console.log(err);
   if (err.name === 'CannotEnrollBeforeStartDateError') {
     return res.status(httpStatus.BAD_REQUEST).send({
       message: err.message,
