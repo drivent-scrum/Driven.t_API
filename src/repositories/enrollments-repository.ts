@@ -17,19 +17,22 @@ async function updateWithAddress(
   updatedEnrollment: UpdateEnrollmentParams,
   updatedAddress: UpdateAddressParams
 ) {
-  return prisma.$transaction(
-    [
-      prisma.enrollment.update({
-        where: { userId },
-        data: updatedEnrollment
-      }),
+  const updateEnrollment = prisma.enrollment.update({
+    where: { userId },
+    data: updatedEnrollment
+  });
 
-      prisma.address.update({
-        where: { enrollmentId },
-        data: updatedAddress,
-      })
-    ]
+  const updateAddress = prisma.address.update({
+    where: { enrollmentId },
+    data: updatedAddress,
+  });
+
+  const [Enrollment, Address] = await prisma.$transaction(
+    [updateEnrollment, updateAddress]
   );
+
+  // Enrollment.Address = Address;
+  // const result = {Enrollment: {Enrollment, Address}} ;
 }
 
 async function update(userId: number, updatedEnrollment: UpdateEnrollmentParams) {

@@ -40,6 +40,7 @@ async function paymentProcess(ticketId: number, userId: number, price: number, c
     cardLastDigits: cardData.number.toString().slice(-4),
   };
 
+  // FIXME: refactor with transaction
   const payment = await paymentsRepository.createPayment(ticketId, paymentData);
   await ticketsRepository.ticketProcessPayment(ticketId);
   await sendEmail(userId, payment, ticket, price);
