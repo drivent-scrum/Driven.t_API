@@ -24,7 +24,33 @@ async function isCurrentEventActive(): Promise<boolean> {
   return now.isAfter(eventStartsAt) && now.isBefore(eventEndsAt);
 }
 
+async function updateEvent(title: string, backgroundUrl: string, logoUrl: string, startDate: string, endDate: string) {
+  const mainEvent = await eventRepository.findFirst();
+
+  if (!mainEvent) {
+    const createdEvent = await eventRepository.create(
+      title,
+      backgroundUrl,
+      logoUrl,
+      new Date(startDate),
+      new Date(endDate),
+    );
+    return exclude(createdEvent, 'createdAt', 'updatedAt');
+  }
+
+  const event = await eventRepository.update(
+    mainEvent.id,
+    title,
+    backgroundUrl,
+    logoUrl,
+    new Date(startDate),
+    new Date(endDate),
+  );
+  return exclude(event, 'createdAt', 'updatedAt');
+}
+
 export const eventsService = {
   getFirstEvent,
   isCurrentEventActive,
+  updateEvent,
 };

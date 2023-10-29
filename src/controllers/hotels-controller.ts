@@ -22,6 +22,7 @@ export async function getHotels(req: AuthenticatedRequest, res: Response) {
 
 export async function getHotelsWithRooms(req: AuthenticatedRequest, res: Response) {
   const cacheHotelWithRooms = await redis.get('hotelWithRooms');
+
   if (cacheHotelWithRooms) {
     return res.status(httpStatus.OK).send(JSON.parse(cacheHotelWithRooms));
   }
@@ -36,7 +37,13 @@ export async function getHotelsWithRooms(req: AuthenticatedRequest, res: Respons
 }
 
 export async function getAllHotelsWithRooms(req: AuthenticatedRequest, res: Response) {
-  const { userId } = req;
-  const hotels = await hotelsService.getAllHotelsWithRooms(userId);
+  const hotels = await hotelsService.getAllHotelsWithRooms();
   res.status(httpStatus.OK).send(hotels);
+}
+
+export async function updateHotelWithRooms(req: AuthenticatedRequest, res: Response) {
+  const hotelId = Number(req.params.hotelId);
+  const { name, image, rooms } = req.body;
+  const hotelWithRooms = await hotelsService.updateHotelWithRooms(hotelId, name, image, rooms);
+  res.status(httpStatus.OK).send(hotelWithRooms);
 }

@@ -7,9 +7,8 @@ import {
   CreateAddressParams,
   enrollmentRepository,
   CreateEnrollmentParams,
-  UpdateEnrollmentParams
+  UpdateEnrollmentParams,
 } from '@/repositories';
-
 
 async function getAddressFromCEP(cep: string): Promise<AddressEnrollment> {
   const result = await request.get(`${process.env.VIA_CEP_API}/${cep}/json/`);
@@ -59,7 +58,7 @@ async function createOrUpdateEnrollmentWithAddress(params: CreateOrUpdateEnrollm
   if (result == null) {
     await createEnrollmentWithAddress(params);
   } else {
-    await updateEnrollmentWithAddress(result.id, params)
+    await updateEnrollmentWithAddress(result.id, params);
   }
 }
 

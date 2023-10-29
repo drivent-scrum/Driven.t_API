@@ -7,6 +7,31 @@ async function findTicketTypes() {
   return result;
 }
 
+async function createTicketType(name: string, price: number, isRemote: boolean, includesHotel: boolean) {
+  return prisma.ticketType.create({
+    data: {
+      name,
+      price,
+      isRemote,
+      includesHotel,
+    },
+  });
+}
+async function updateTicketType(id: number, name: string, price: number, isRemote: boolean, includesHotel: boolean) {
+  return prisma.ticketType.update({
+    where: {
+      id,
+    },
+    data: {
+      name,
+      price,
+      isRemote,
+      includesHotel,
+      updatedAt: new Date(),
+    },
+  });
+}
+
 async function findTicketByEnrollmentId(enrollmentId: number) {
   const result = await prisma.ticket.findUnique({
     where: { enrollmentId },
@@ -53,4 +78,6 @@ export const ticketsRepository = {
   createTicket,
   findTicketById,
   ticketProcessPayment,
+  createTicketType,
+  updateTicketType,
 };

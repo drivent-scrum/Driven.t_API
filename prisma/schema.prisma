@@ -12,21 +12,21 @@ datasource db {
 }
 
 model User {
-  id         Int                             @id @default(autoincrement())
-  email      String                          @unique @db.VarChar(255)
-  password   String                          @db.VarChar(255)
-  createdAt  DateTime                        @default(now())
-  updatedAt  DateTime                        @updatedAt
+  id                   Int                    @id @default(autoincrement())
+  email                String                 @unique @db.VarChar(255)
+  password             String                 @db.VarChar(255)
+  createdAt            DateTime               @default(now())
+  updatedAt            DateTime               @updatedAt
   ActivityRegistration ActivityRegistration[]
-  Session    Session[]
-  Enrollment Enrollment[]
-  Booking    Booking?
+  Session              Session[]
+  Enrollment           Enrollment[]
+  Booking              Booking?
 }
 
 model Session {
   id        Int      @id @default(autoincrement())
   userId    Int
-  User      User     @relation(fields: [userId], references: [id])
+  User      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   token     String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -50,7 +50,7 @@ model Enrollment {
   birthday  DateTime
   phone     String    @db.VarChar(255)
   userId    Int       @unique
-  User      User      @relation(fields: [userId], references: [id])
+  User      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   Address   Address[]
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
@@ -67,7 +67,7 @@ model Address {
   neighborhood  String     @db.VarChar(255)
   addressDetail String?    @db.VarChar(255)
   enrollmentId  Int        @unique
-  Enrollment    Enrollment @relation(fields: [enrollmentId], references: [id])
+  Enrollment    Enrollment @relation(fields: [enrollmentId], references: [id], onDelete: Cascade)
   createdAt     DateTime   @default(now())
   updatedAt     DateTime   @updatedAt
 }
@@ -86,9 +86,9 @@ model TicketType {
 model Ticket {
   id           Int          @id @default(autoincrement())
   ticketTypeId Int
-  TicketType   TicketType   @relation(fields: [ticketTypeId], references: [id])
+  TicketType   TicketType   @relation(fields: [ticketTypeId], references: [id], onDelete: Cascade)
   enrollmentId Int          @unique
-  Enrollment   Enrollment   @relation(fields: [enrollmentId], references: [id])
+  Enrollment   Enrollment   @relation(fields: [enrollmentId], references: [id], onDelete: Cascade)
   status       TicketStatus
   createdAt    DateTime     @default(now())
   updatedAt    DateTime     @updatedAt
@@ -103,7 +103,7 @@ enum TicketStatus {
 model Payment {
   id             Int      @id @default(autoincrement())
   ticketId       Int      @unique
-  Ticket         Ticket   @relation(fields: [ticketId], references: [id])
+  Ticket         Ticket   @relation(fields: [ticketId], references: [id], onDelete: Cascade)
   value          Int
   cardIssuer     String
   cardLastDigits String
@@ -125,7 +125,7 @@ model Room {
   name      String
   capacity  Int
   hotelId   Int
-  Hotel     Hotel     @relation(fields: [hotelId], references: [id])
+  Hotel     Hotel     @relation(fields: [hotelId], references: [id], onDelete: Cascade)
   Booking   Booking[]
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
@@ -133,9 +133,9 @@ model Room {
 
 model Booking {
   id        Int      @id @default(autoincrement())
-  User      User     @relation(fields: [userId], references: [id])
+  User      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId    Int      @unique
-  Room      Room     @relation(fields: [roomId], references: [id])
+  Room      Room     @relation(fields: [roomId], references: [id], onDelete: Cascade)
   roomId    Int
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -151,7 +151,7 @@ model Activity {
   capacity             Int
   createdAt            DateTime               @default(now())
   updatedAt            DateTime               @updatedAt
-  ActivityDay          ActivityDay            @relation(fields: [activityDayId], references: [id])
+  ActivityDay          ActivityDay            @relation(fields: [activityDayId], references: [id], onDelete: Cascade)
   ActivityRegistration ActivityRegistration[]
 }
 
@@ -171,7 +171,7 @@ model ActivityRegistration {
   activityDayId Int
   createdAt     DateTime    @default(now())
   updatedAt     DateTime    @updatedAt
-  ActivityDay   ActivityDay @relation(fields: [activityDayId], references: [id])
-  Activity      Activity    @relation(fields: [activityId], references: [id])
-  User          User        @relation(fields: [userId], references: [id])
+  ActivityDay   ActivityDay @relation(fields: [activityDayId], references: [id], onDelete: Cascade)
+  Activity      Activity    @relation(fields: [activityId], references: [id], onDelete: Cascade)
+  User          User        @relation(fields: [userId], references: [id], onDelete: Cascade)
 }

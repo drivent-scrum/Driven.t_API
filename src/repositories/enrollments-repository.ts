@@ -1,6 +1,6 @@
 import { Enrollment } from '@prisma/client';
-import { prisma } from '@/config';
 import { CreateAddressParams, UpdateAddressParams } from './address-repository';
+import { prisma } from '@/config';
 
 async function findWithAddressByUserId(userId: number) {
   return prisma.enrollment.findFirst({
@@ -15,7 +15,7 @@ async function updateWithAddress(
   userId: number,
   enrollmentId: number,
   updatedEnrollment: UpdateEnrollmentParams,
-  updatedAddress: UpdateAddressParams
+  updatedAddress: UpdateAddressParams,
 ) {
   const updateEnrollment = prisma.enrollment.update({
     where: { userId },
@@ -36,21 +36,18 @@ async function updateWithAddress(
 async function update(userId: number, updatedEnrollment: UpdateEnrollmentParams) {
   return prisma.enrollment.update({
     where: { userId },
-    data: updatedEnrollment
+    data: updatedEnrollment,
   });
 }
 
-async function createWithAddress(
-  createdEnrollment: CreateEnrollmentParams,
-  createdAddress: CreateAddressParams
-) {
+async function createWithAddress(createdEnrollment: CreateEnrollmentParams, createdAddress: CreateAddressParams) {
   return prisma.enrollment.create({
     data: {
       ...createdEnrollment,
       Address: {
-        create: createdAddress
-      }
-    }
+        create: createdAddress,
+      },
+    },
   });
 }
 
@@ -61,5 +58,5 @@ export const enrollmentRepository = {
   findWithAddressByUserId,
   update,
   createWithAddress,
-  updateWithAddress
+  updateWithAddress,
 };
