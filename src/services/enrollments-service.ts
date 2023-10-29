@@ -1,9 +1,15 @@
 import { Address, Enrollment } from '@prisma/client';
 import { request } from '@/utils/request';
 import { enrollmentNotFoundError, invalidCepError } from '@/errors';
-import { addressRepository, CreateAddressParams, enrollmentRepository, CreateEnrollmentParams } from '@/repositories';
 import { exclude } from '@/utils/prisma-utils';
 import { AddressEnrollment } from '@/protocols';
+import {
+  CreateAddressParams,
+  enrollmentRepository,
+  CreateEnrollmentParams,
+  UpdateEnrollmentParams
+} from '@/repositories';
+
 
 async function getAddressFromCEP(cep: string): Promise<AddressEnrollment> {
   const result = await request.get(`${process.env.VIA_CEP_API}/${cep}/json/`);
@@ -49,15 +55,35 @@ function getFirstAddress(firstAddress: Address): GetAddressResult {
 type GetAddressResult = Omit<Address, 'createdAt' | 'updatedAt' | 'enrollmentId'>;
 
 async function createOrUpdateEnrollmentWithAddress(params: CreateOrUpdateEnrollmentWithAddress) {
+  const result = await enrollmentRepository.findWithAddressByUserId(params.userId);
+  if (result == null) {
+    await createEnrollmentWithAddress(params);
+  } else {
+    await updateEnrollmentWithAddress(result.id, params)
+  }
+}
+
+async function updateEnrollment(userId: number, enrollmentParams: UpdateEnrollmentParams) {
+  enrollmentParams.birthday = new Date(enrollmentParams.birthday);
+  await enrollmentRepository.update(userId, enrollmentParams);
+}
+
+async function updateEnrollmentWithAddress(enrollmentId: number, params: CreateOrUpdateEnrollmentWithAddress) {
   const enrollment = exclude(params, 'address');
   enrollment.birthday = new Date(enrollment.birthday);
   const address = getAddressForUpsert(params.address);
 
   await getAddressFromCEP(address.cep);
+  await enrollmentRepository.updateWithAddress(enrollment.userId, enrollmentId, enrollment, address);
+}
 
-  // FIXME: refactor to transaction
-  const newEnrollment = await enrollmentRepository.upsert(params.userId, enrollment, exclude(enrollment, 'userId'));
-  await addressRepository.upsert(newEnrollment.id, address, address);
+async function createEnrollmentWithAddress(params: CreateEnrollmentWithAddress) {
+  const enrollment = exclude(params, 'address');
+  enrollment.birthday = new Date(enrollment.birthday);
+  const address = getAddressForUpsert(params.address);
+
+  await getAddressFromCEP(address.cep);
+  await enrollmentRepository.createWithAddress(enrollment, address);
 }
 
 function getAddressForUpsert(address: CreateAddressParams) {
@@ -67,6 +93,10 @@ function getAddressForUpsert(address: CreateAddressParams) {
   };
 }
 
+export type CreateEnrollmentWithAddress = CreateEnrollmentParams & {
+  address: CreateAddressParams;
+};
+
 export type CreateOrUpdateEnrollmentWithAddress = CreateEnrollmentParams & {
   address: CreateAddressParams;
 };
@@ -74,5 +104,8 @@ export type CreateOrUpdateEnrollmentWithAddress = CreateEnrollmentParams & {
 export const enrollmentsService = {
   getOneWithAddressByUserId,
   createOrUpdateEnrollmentWithAddress,
+  createEnrollmentWithAddress,
+  updateEnrollmentWithAddress,
+  updateEnrollment,
   getAddressFromCEP,
 };
