@@ -12,5 +12,5 @@ export type CreateAddressParams = Omit<Address, 'id' | 'createdAt' | 'updatedAt'
 export type UpdateAddressParams = CreateAddressParams;
 
 export const addressRepository = {
-  update
+  update,
 };
