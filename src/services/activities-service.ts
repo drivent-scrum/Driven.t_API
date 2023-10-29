@@ -66,6 +66,14 @@ async function changeActivityFromDay(activityFromDay: number, params: UpdateAcit
   await activitiesRepository.updateActivityFromDay(activityFromDay, params);
 }
 
+async function deleteActivityDay(activityDayId: number) {
+  await activitiesRepository.deleteActivityDay(activityDayId);
+}
+
+async function deleteActivityFromDay(activityId: number) {
+  await activitiesRepository.deleteActivityFromDay(activityId);
+}
+
 type ActivityDayParams = ActivityDay;
 type ActivityParams = Partial<Activity>;
 
@@ -78,4 +86,6 @@ export const activitiesService = {
   registerActivity,
   changeActivityDay,
   changeActivityFromDay,
+  deleteActivityDay,
+  deleteActivityFromDay,
 };

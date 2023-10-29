@@ -27,12 +27,26 @@ export async function changeActivityDay(req: AuthenticatedRequest, res: Response
   const activityDayId = Number(req.params.activityDayId);
 
   await activitiesService.changeActivityDay(activityDayId, req.body);
-  return res.sendStatus(httpStatus.NO_CONTENT);
+  return res.sendStatus(httpStatus.OK);
 }
 
 export async function changeActivityFromDay(req: AuthenticatedRequest, res: Response) {
   const activityId = Number(req.params.activityId);
 
   await activitiesService.changeActivityFromDay(activityId, req.body);
+  return res.sendStatus(httpStatus.OK);
+}
+
+export async function deleteActivityDay(req: AuthenticatedRequest, res: Response) {
+  const activityDayId = Number(req.params.activityDayId);
+
+  await activitiesService.deleteActivityDay(activityDayId);
+  return res.sendStatus(httpStatus.NO_CONTENT);
+}
+
+export async function deleteActivityFromDay(req: AuthenticatedRequest, res: Response) {
+  const activityId = Number(req.params.activityId);
+
+  await activitiesService.deleteActivityFromDay(activityId);
   return res.sendStatus(httpStatus.NO_CONTENT);
 }

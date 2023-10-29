@@ -6,6 +6,8 @@ import {
   registerActivity,
   changeActivityDay,
   changeActivityFromDay,
+  deleteActivityDay,
+  deleteActivityFromDay,
 } from '@/controllers';
 import { activitiesSchema, updateActivitySchema, updateActivityDaySchema } from '@/schemas/activities-schemas';
 
@@ -18,5 +20,7 @@ activitiesRouter
   .post('/', validateBody(activitiesSchema), registerActivity)
   .put('/activityDay/:activityDayId', validateBody(updateActivityDaySchema), changeActivityDay)
   .patch('/activityFromDay/:activityId', validateBody(updateActivitySchema), changeActivityFromDay)
+  .delete('/activityDay/:activityDayId', deleteActivityDay)
+  .delete('/activityFromDay/:activityId', deleteActivityFromDay);
 
 export { activitiesRouter };

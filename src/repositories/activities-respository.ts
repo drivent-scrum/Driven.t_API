@@ -1,7 +1,7 @@
 import { Activity } from '@prisma/client';
+import dayjs from 'dayjs';
 import { prisma } from '@/config';
 import { UpdateAcitivity, UpdateActivityDay } from '@/services';
-import dayjs from 'dayjs';
 
 async function getAllActivitiesDay() {
   return await prisma.activityDay.findMany({
@@ -89,6 +89,26 @@ async function updateActivityFromDay(activityFromDayId: number, params: UpdateAc
   });
 }
 
+async function deleteActivityDay(activityDayId: number) {
+  await prisma.activityRegistration.deleteMany({
+    where: { activityDayId },
+  });
+
+  return await prisma.activityDay.delete({
+    where: { id: activityDayId },
+  });
+}
+
+async function deleteActivityFromDay(activityId: number) {
+  await prisma.activityRegistration.deleteMany({
+    where: { activityId },
+  });
+
+  return await prisma.activity.delete({
+    where: { id: activityId },
+  });
+}
+
 export const activitiesRepository = {
   getAllActivitiesDay,
   findActivityDayById,
@@ -99,4 +119,6 @@ export const activitiesRepository = {
   updateActivityCapacity,
   updateActivityDay,
   updateActivityFromDay,
+  deleteActivityDay,
+  deleteActivityFromDay,
 };
