@@ -1,5 +1,5 @@
-import { Activity } from '@prisma/client';
-import { conflictError, notFoundError } from '@/errors';
+import { Activity, ActivityDay } from '@prisma/client';
+import { conflictError, invalidDataError, notFoundError } from '@/errors';
 import { activitiesRepository } from '@/repositories';
 import { InputActivityBody } from '@/protocols';
 
@@ -58,8 +58,34 @@ function formatTimestamp(timestamp: string) {
   return Number(timestamp.split(':').join(''));
 }
 
+async function changeActivityDay(activityDayId: number, params: UpdateActivityDay) {
+  await activitiesRepository.updateActivityDay(activityDayId, params);
+}
+
+async function changeActivityFromDay(activityFromDay: number, params: UpdateAcitivity) {
+  await activitiesRepository.updateActivityFromDay(activityFromDay, params);
+}
+
+async function deleteActivityDay(activityDayId: number) {
+  await activitiesRepository.deleteActivityDay(activityDayId);
+}
+
+async function deleteActivityFromDay(activityId: number) {
+  await activitiesRepository.deleteActivityFromDay(activityId);
+}
+
+type ActivityDayParams = ActivityDay;
+type ActivityParams = Partial<Activity>;
+
+export type UpdateActivityDay = Pick<ActivityDayParams, 'startsAt'>;
+export type UpdateAcitivity = Omit<ActivityParams, 'id' | 'createdAt' | 'updatedAt'>;
+
 export const activitiesService = {
   getActivitiesDay,
   getActivitiesFromDay,
   registerActivity,
+  changeActivityDay,
+  changeActivityFromDay,
+  deleteActivityDay,
+  deleteActivityFromDay,
 };

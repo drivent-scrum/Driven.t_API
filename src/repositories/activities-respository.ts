@@ -1,5 +1,7 @@
 import { Activity } from '@prisma/client';
+import dayjs from 'dayjs';
 import { prisma } from '@/config';
+import { UpdateAcitivity, UpdateActivityDay } from '@/services';
 
 async function getAllActivitiesDay() {
   return await prisma.activityDay.findMany({
@@ -59,6 +61,54 @@ async function updateActivityCapacity(activity: Activity) {
   });
 }
 
+async function updateActivityDay(activityDayId: number, params: UpdateActivityDay) {
+  const updatedAt = dayjs().toDate();
+
+  return await prisma.activityDay.update({
+    where: { id: activityDayId },
+    data: {
+      startsAt: params.startsAt,
+      updatedAt,
+    },
+  });
+}
+
+async function updateActivityFromDay(activityFromDayId: number, params: UpdateAcitivity) {
+  const updatedAt = dayjs().toDate();
+
+  return await prisma.activity.update({
+    where: { id: activityFromDayId },
+    data: {
+      activityDayId: params.activityDayId || undefined,
+      name: params.name || undefined,
+      location: params.location || undefined,
+      capacity: params.capacity || undefined,
+      startsAt: params.startsAt || undefined,
+      updatedAt,
+    },
+  });
+}
+
+async function deleteActivityDay(activityDayId: number) {
+  await prisma.activityRegistration.deleteMany({
+    where: { activityDayId },
+  });
+
+  return await prisma.activityDay.delete({
+    where: { id: activityDayId },
+  });
+}
+
+async function deleteActivityFromDay(activityId: number) {
+  await prisma.activityRegistration.deleteMany({
+    where: { activityId },
+  });
+
+  return await prisma.activity.delete({
+    where: { id: activityId },
+  });
+}
+
 export const activitiesRepository = {
   getAllActivitiesDay,
   findActivityDayById,
@@ -67,4 +117,8 @@ export const activitiesRepository = {
   getUserActivities,
   registerUserActivity,
   updateActivityCapacity,
+  updateActivityDay,
+  updateActivityFromDay,
+  deleteActivityDay,
+  deleteActivityFromDay,
 };
