@@ -36,17 +36,17 @@ async function updateEvent(title: string, backgroundUrl: string, logoUrl: string
       new Date(endDate),
     );
     return exclude(createdEvent, 'createdAt', 'updatedAt');
+  } else {
+    const event = await eventRepository.update(
+      mainEvent.id,
+      title,
+      backgroundUrl,
+      logoUrl,
+      new Date(startDate),
+      new Date(endDate),
+    );
+    return exclude(event, 'createdAt', 'updatedAt');
   }
-
-  const event = await eventRepository.update(
-    mainEvent.id,
-    title,
-    backgroundUrl,
-    logoUrl,
-    new Date(startDate),
-    new Date(endDate),
-  );
-  return exclude(event, 'createdAt', 'updatedAt');
 }
 
 export const eventsService = {
