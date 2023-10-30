@@ -11,21 +11,24 @@ export async function getActivitiesDay(req: AuthenticatedRequest, res: Response)
 export async function getActivitiesFromDay(req: AuthenticatedRequest, res: Response) {
   const { userId } = req;
   const activityDayId = Number(req.params.activityDayId);
-
   const activitiesFromDay = await activitiesService.getActivitiesFromDay(activityDayId, userId);
   return res.status(httpStatus.OK).send(activitiesFromDay);
 }
 
+export async function activitieDayCount(req: AuthenticatedRequest, res: Response) {
+  const { userId } = req;
+  const result = await activitiesService.getActivitiesCount(userId);
+  return res.status(httpStatus.OK).send({ count: result });
+}
+
 export async function registerActivity(req: AuthenticatedRequest, res: Response) {
   const { userId } = req;
-
   await activitiesService.registerActivity(req.body, userId);
   return res.sendStatus(httpStatus.CREATED);
 }
 
 export async function changeActivityDay(req: AuthenticatedRequest, res: Response) {
   const activityDayId = Number(req.params.activityDayId);
-
   await activitiesService.changeActivityDay(activityDayId, req.body);
   return res.sendStatus(httpStatus.OK);
 }

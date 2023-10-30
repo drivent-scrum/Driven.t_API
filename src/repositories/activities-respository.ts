@@ -73,6 +73,19 @@ async function updateActivityDay(activityDayId: number, params: UpdateActivityDa
   });
 }
 
+async function getActivitiesCount(userId: number) {
+  const count = await prisma.activityRegistration.aggregate({
+    where: {
+      userId: userId,
+    },
+    _count: {
+      _all: true,
+    },
+  });
+
+  return count._count._all;
+}
+
 async function updateActivityFromDay(activityFromDayId: number, params: UpdateAcitivity) {
   const updatedAt = dayjs().toDate();
 
@@ -121,4 +134,5 @@ export const activitiesRepository = {
   updateActivityFromDay,
   deleteActivityDay,
   deleteActivityFromDay,
+  getActivitiesCount,
 };
