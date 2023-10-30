@@ -20,6 +20,11 @@ async function getActivitiesFromDay(activityDayId: number, userId: number) {
   return { activitiesFromDay, userActivitiesIds };
 }
 
+async function getActivitiesCount(userId: number) {
+  const activitiesCount = await activitiesRepository.getActivitiesCount(userId);
+  return activitiesCount;
+}
+
 async function registerActivity(params: InputActivityBody, userId: number) {
   const { activityId, activityDayId } = params;
 
@@ -88,4 +93,5 @@ export const activitiesService = {
   changeActivityFromDay,
   deleteActivityDay,
   deleteActivityFromDay,
+  getActivitiesCount,
 };
