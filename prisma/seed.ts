@@ -23,6 +23,7 @@ async function main() {
         { startsAt: dayjs().add(2, "days").toDate() },
         { startsAt: dayjs().add(3, "days").toDate() },
         { startsAt: dayjs().add(4, "days").toDate() },
+        { startsAt: dayjs().add(5, "days").toDate() },
       ],
     });
 
@@ -89,6 +90,30 @@ async function main() {
           capacity: 27, 
           startsAt: "09:00",
           endsAt: "10:00",
+        },
+        { 
+          activityDayId: activityDays[3].id, 
+          name: "Palestra b", 
+          location: "Workshop", 
+          capacity: 27, 
+          startsAt: "12:00",
+          endsAt: "14:00",
+        },
+        { 
+          activityDayId: activityDays[3].id, 
+          name: "Palestra b", 
+          location: "Workshop", 
+          capacity: 27, 
+          startsAt: "14:00",
+          endsAt: "16:00",
+        },
+        { 
+          activityDayId: activityDays[3].id, 
+          name: "Palestra b", 
+          location: "Workshop", 
+          capacity: 27, 
+          startsAt: "16:00",
+          endsAt: "16:30",
         },
       ]
     });

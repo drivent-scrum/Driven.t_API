@@ -12,7 +12,7 @@ export async function getDefaultEvent(_req: Request, res: Response) {
   }
 
   const event = await eventsService.getFirstEvent();
-  await redis.set('event', JSON.stringify(event), 'EX', DEFAULT_EXPIRATION);
+  await redis.set('event', JSON.stringify(event), 'EX', 10);
 
   res.status(httpStatus.OK).send(event);
 }
